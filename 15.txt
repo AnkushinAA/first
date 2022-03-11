@@ -1,0 +1,289 @@
+#include <iostream>
+#include <fstream>
+#include <conio.h>
+#include <string>
+#include <time.h>
+#include <Windows.h>
+
+using namespace std;
+void in(int** x, int y)
+{
+	int n = 0;
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			n++;
+			if (n < (y*y))x[i][j] = n;
+			if (n == (y*y))x[i][j] = 0;
+		}
+	}	
+}
+void print(int** x, int y)
+{
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			cout<<x[i][j]<<"\t";			
+		}
+		cout << endl;
+	}
+}
+bool compare(int** x, int y,bool l)
+{
+	int n = 0,s=0;
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			n++;
+			if (n < (y * y) && x[i][j] == n)
+			{
+				s++;
+			}
+			if (n == (y * y) && x[i][j] == 0)
+			{
+				s++;
+			}
+		}
+	}
+	if (s == y * y)
+	{
+		l = 1;
+	}
+	return l;
+}
+void automix(int** x, int y)
+{
+	int a=0, b=0,r,w,s;
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			if (x[i][j] == 0)
+			{
+				a = i;
+				b = j;				
+			}
+		}		
+	}
+	s = 0;
+	while(s<200)
+	{
+		Sleep(10);		
+		r = 1 + rand() % 4;		
+		if (r == 1&& (a + 1) < y)
+		{													
+			x[a][b] = x[a + 1][b];
+			x[a + 1][b] = 0;
+			a++;
+					
+		}
+		if (r == 2&& (a - 1) >= 0)
+		{				
+			x[a][b] = x[a - 1][b];
+			x[a - 1][b] = 0;
+			a--;						
+		}
+		if (r == 3&& (b + 1) < y)
+		{			
+			x[a][b] = x[a][b + 1];
+			x[a][b + 1] = 0;
+			b++;					
+		}
+		if (r == 4&& (b - 1) >= 0)
+		{				
+			x[a][b] = x[a][b - 1];
+			x[a][b - 1] = 0;
+			b--;
+		}
+		s++;		
+	}	
+}
+void step(int** x, int y, bool l)
+{
+	int a, b,s=0;
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			if (x[i][j] == 0)
+			{
+				a = i;
+				b = j;
+			}
+		}
+	}		
+	while (compare(x, y,l) == 0)
+	{
+		cout << "Ваш шаг: " << endl;
+		string r;
+		cin >> r;
+		if (r == "s" && (a + 1) < y)
+		{
+			x[a][b] = x[a + 1][b];
+			x[a + 1][b] = 0;
+			a++;
+
+		}
+		if (r == "w" && (a - 1) >= 0)
+		{
+			x[a][b] = x[a - 1][b];
+			x[a - 1][b] = 0;
+			a--;
+		}
+		if (r == "d" && (b + 1) < y)
+		{
+			x[a][b] = x[a][b + 1];
+			x[a][b + 1] = 0;
+			b++;
+		}
+		if (r == "a" && (b - 1) >= 0)
+		{
+			x[a][b] = x[a][b - 1];
+			x[a][b - 1] = 0;
+			b--;
+		}
+		s++;
+		system("cls");
+		print(x, y);
+	}
+	cout << "Количество шагов: " << s << endl;
+}
+void mixing(int** x, int y)
+{
+	int a, b;	
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			if (x[i][j] == 0)
+			{
+				a = i;
+				b = j;
+			}
+		}
+	}
+	string r;
+	while (r != "0")
+	{
+		cout << "Перемешивание Ваш шаг: " << endl << "Остановить - 0" << endl;
+		cin >> r;
+		if (r == "s" && (a + 1) < y)
+		{
+			x[a][b] = x[a + 1][b];
+			x[a + 1][b] = 0;
+			a++;
+
+		}
+		if (r == "w" && (a - 1) >= 0)
+		{
+			x[a][b] = x[a - 1][b];
+			x[a - 1][b] = 0;
+			a--;
+		}
+		if (r == "d" && (b + 1) < y)
+		{
+			x[a][b] = x[a][b + 1];
+			x[a][b + 1] = 0;
+			b++;
+		}
+		if (r == "a" && (b - 1) >= 0)
+		{
+			x[a][b] = x[a][b - 1];
+			x[a][b - 1] = 0;
+			b--;
+		}
+		system("cls");
+		print(x, y);
+	}	
+}
+void compstep(int** x, int y, bool l)
+{
+	int a = 0, b = 0, r, w;
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			if (x[i][j] == 0)
+			{
+				a = i;
+				b = j;
+			}
+		}
+	}	
+	while (compare(x,y,l)==0)
+	{
+		Sleep(200);
+		r = 1 + rand() % 4;
+		if (r == 1 && (a + 1) < y)
+		{
+			x[a][b] = x[a + 1][b];
+			x[a + 1][b] = 0;
+			a++;
+
+		}
+		if (r == 2 && (a - 1) >= 0)
+		{
+			x[a][b] = x[a - 1][b];
+			x[a - 1][b] = 0;
+			a--;
+		}
+		if (r == 3 && (b + 1) < y)
+		{
+			x[a][b] = x[a][b + 1];
+			x[a][b + 1] = 0;
+			b++;
+		}
+		if (r == 4 && (b - 1) >= 0)
+		{
+			x[a][b] = x[a][b - 1];
+			x[a][b - 1] = 0;
+			b--;
+		}
+		system("cls");
+		print(x, y);
+	}
+}
+int main()
+{
+	again:
+	setlocale(LC_ALL, "");
+	srand(time(NULL));
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	int volume, user, mix;
+	cout << "\t\t\t___ИГРА ПЯТНАШКИ___" << endl;
+	cout << "\t\t__Управление игрой кнопками a,s,w,d__ " << endl;
+	cout << "Какой размер игры? 1 - 3Х3, 2 - 4Х4 " << endl;
+	cin >> volume;
+	cout << "Кто соберет пятнашки? 1-Игрок,2-Компьютер " << endl;
+	cin >> user;
+	cout << "Кто перемешает пятнашки? 1-Игрок,2-Компьютер " << endl;
+	cin >> mix;
+	if (volume < 1 && volume>2 && user < 1 && user>2 && mix < 1 && mix>2)goto again;
+	int a = volume + 2;
+	int **A=new int*[a];
+	for (int i = 0; i < a; i++)
+	{
+		A[i] = new int[a];
+	}
+	in(A, a);
+	print(A, a);
+	bool l = 0;			
+	if (mix==1)mixing(A, a);
+	if(mix==2)automix(A, a);
+	cout << endl;
+	print(A, a);
+	int t1 = time(NULL);		
+	if(user==1)step(A, a, l);
+	if (user == 2)compstep(A, a, l);
+	int t2 = time(NULL);
+	cout<<"Время игры: "<<difftime(t2, t1)<<endl;
+	for (int i = 0; i < a; i++)
+	{
+		delete[]A[i];
+	}
+	delete[]A;
+}

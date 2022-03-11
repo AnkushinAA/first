@@ -1,0 +1,543 @@
+#include <iostream>
+#include <fstream>
+#include <conio.h>
+#include <string>
+#include <time.h>
+#include <Windows.h>
+#define ship (char)79 //O
+#define shel (char)42 //*
+#define field (char)96 //'
+#define ask (char)63 //?
+#define hit (char)88 //X
+#define miss (char)64 //@
+
+using namespace std;
+char shell(char A[10][10],char x,char y)//создаем облако вокруг корабля. х знак облака, у вокруг чего облако
+{
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (A[i][j] == y && j - 1 >= 0 && A[i][j - 1] != y)
+			{
+				A[i][j - 1] = x;
+			}
+			if (A[i][j] == y && j + 1 < 10 && A[i][j + 1] != y)
+			{
+				A[i][j + 1] = x;
+			}
+		}
+	}
+	for (int j = 0; j < 10; j++)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (A[i][j] == y && i - 1 >= 0 && A[i - 1][j] != y)
+			{
+				A[i - 1][j] = x;
+			}
+			if (A[i][j] == y && i + 1 < 10 && A[i + 1][j] != y)
+			{
+				A[i + 1][j] = x;
+			}
+		}
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (A[i + 1][j] == x && A[i][j + 1] == x && A[i][j] != y && A[i + 1][j + 1] == y)
+			{
+				A[i][j] = x;
+			}
+			if (A[i - 1][j] == x && A[i][j + 1] == x && A[i][j] != y && A[i - 1][j + 1] == y)
+			{
+				A[i][j] = x;
+			}
+			if (A[i + 1][j] == x && A[i][j - 1] == x && A[i][j] != y && A[i + 1][j - 1] == y)
+			{
+				A[i][j] = x;
+			}
+			if (A[i - 1][j] == x && A[i][j - 1] == x && A[i][j] != y && A[i - 1][j - 1] == y)
+			{
+				A[i][j] = x;
+			}
+		}
+	}
+	return A[10][10];
+}
+void print(char A[10][10],char B[10][10],int* z,int* l)
+{
+	cout << "   ";
+	for (int i = 0; i < 10; i++)
+	{
+		cout << i << " ";
+	}
+	cout << "\t";
+	for (int i = 0; i < 10; i++)
+	{
+		cout << i << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < 10; i++)
+	{
+		cout << i << "  ";
+
+		for (int j = 0; j < 10; j++)
+		{
+			cout << A[i][j] << " ";
+		}
+		cout << "\t";
+		for (int k = 0; k < 10; k++)
+		{
+			cout << B[i][k] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+	cout << "У игрока 1 осталось " << *z << " кораблей" << "  У игрока 2 осталось " << *l << " кораблей" << endl;
+	Sleep(1000);
+}
+char four_deck_ship(char A[10][10])
+{	
+	int a = rand() % 9;
+	int b = rand() % 9;
+	if (a + 4 < 10)
+	{
+		for (int i = a; i < a + 4; i++)
+		{
+			A[i][b] = ship;
+		}
+	}
+	else for (int i = a - 4; i < a; i++)
+	{
+		A[i][b] = ship;
+	}
+	return A[10][10];
+}
+char three_deck_ship(char A[10][10])
+{	
+	int s = 0;
+	while (s < 3)
+	{
+		int a = rand() % 9;
+		int b = rand() % 9;
+		int c = rand() % 2;
+		switch (c)
+		{
+		case 0:
+			if (a + 3 < 10)
+			{
+				if (A[a][b] != ship && A[a][b] != shel && A[a + 1][b] != ship && A[a + 1][b] != shel && A[a + 2][b] != ship && A[a + 2][b] != shel)
+				{
+					for (int i = a; i < a + 3; i++)
+					{
+						s++;
+						A[i][b] = ship;
+					}
+				}
+			}
+			break;
+		case 1:
+			if (a + 3 < 10)
+			{
+				if (A[b][a] != ship && A[b][a] != shel && A[b][a + 1] != ship && A[b][a + 1] != shel && A[b][a + 2] != ship && A[b][a + 2] != shel)
+				{
+					for (int i = a; i < a + 3; i++)
+					{
+						s++;
+						A[b][i] = ship;
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}		
+	return A[10][10];
+}
+char too_deck_ship(char A[10][10])
+{	
+	int s = 0;
+	while (s < 2)
+	{
+		int a = rand() % 9;
+		int b = rand() % 9;		
+		int c = rand() % 2;
+		switch (c)
+		{
+		case 0:
+			if (a + 2 < 10)
+			{
+				if (A[a][b] != ship && A[a][b] != shel && A[a + 1][b] != ship && A[a + 1][b] != shel)
+				{
+					for (int i = a; i < a + 2; i++)
+					{
+						s++;
+						A[i][b] = ship;
+					}
+				}
+			}
+			break;
+		case 1:
+			if (a + 2 < 10)
+			{
+				if (A[b][a] != ship && A[b][a] != shel && A[b][a + 1] != ship && A[b][a + 1] != shel)
+				{
+					for (int i = a; i < a + 2; i++)
+					{
+						s++;
+						A[b][i] = ship;
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	return A[10][10];
+}
+char one_deck_ship(char A[10][10])
+{	
+	int s = 0;
+	while (s < 1)
+	{
+		int a = rand() % 9;
+		int b = rand() % 9;
+		int c = rand() % 2;
+		switch (c)
+		{
+		case 0:
+			if (a + 1 < 10)
+			{
+				if (A[a][b] != ship && A[a][b] != shel)
+				{
+					for (int i = a; i < a + 1; i++)
+					{
+						s++;
+						A[i][b] = ship;
+					}
+				}
+			}
+			break;
+		case 1:
+			if (a + 1 < 10)
+			{
+				if (A[b][a] != ship && A[b][a] != shel)
+				{
+					for (int i = a; i < a + 1; i++)
+					{
+						s++;
+						A[b][i] = ship;
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	return A[10][10];
+}
+void menu(int*a,int*b,int*c)//меню выбора режимов иргы
+{
+	cout << "Выберите игроков:" << endl;
+	cout << "1-Игрок-Компьютер" << endl << "2-Компьютер-Компьютер" << endl;
+	int choice;
+	cin >> choice;
+	*a = choice;
+	if (*a == 2)goto next;//пропуск ручной расстановки
+	cout << "Выберите режим расстановки:" << endl;
+	cout << "1-Ручная расстановка" << endl << "2-Автоматическая расстановка" << endl;
+	cin >> choice;
+	*b = choice;
+	next:
+	cout << "Выберите режим игры:" << endl;
+	cout << "1-Случайная" << endl << "2-Интелектуальная" << endl;
+	cin >> choice;
+	*c = choice;
+}
+char userset(char x[10][10])
+{
+	for (int i = 0; i < 10; i++)
+	{
+		int choice, orient, ps;		
+		cout << "Введите размер корабля:" << endl;
+		cin >> ps;
+		cout << "Введите начальное значение ячейки корабля:" << endl;
+		cin >> choice;
+		if (ps == 1)
+		{
+			orient = 1; goto onedeck;
+		}
+		cout << "Введите значение направления корабля:" << endl << "1 - Горизонтально, 2 - вертикально";
+		cin >> orient;
+		onedeck:
+		int X = choice / 10;
+		int Y = choice % 10;
+		if (orient == 2)for (int i = X; i < X + ps; i++)
+		{
+			x[i][Y] = ship;
+		}
+		if (orient == 1)for (int i = Y; i < Y + ps; i++)
+		{
+			x[X][i] = ship;
+		}
+		cout << "   ";
+		for (int i = 0; i < 10; i++)
+		{
+			cout << i << " ";
+		}
+		cout << endl;
+		for (int i = 0; i < 10; i++)
+		{
+			cout << i << "  ";
+			for (int j = 0; j < 10; j++)
+			{
+				cout << x[i][j] << " ";
+			}
+			cout << endl;
+		}		
+	}	
+	return x[10][10];
+}
+void choiceuser(char Q[10][10], char C[10][10], char W[10][10],int* x, int* y,int* ship1, int*ship2)
+{
+	int q;
+	cout << "сделайте выбор:" << endl;
+	cout << "111-для паузы, 222-для перезапуска игры, 333-для выхода" << endl;
+	cout << "Адрес выстрела: ";
+	cin >> q;
+	if (q == 111) system("pause");
+	if (q == 222)*ship1=222;
+	if (q==333)exit(0);
+	*x = q / 10;
+	*y = q % 10;
+	if (C[*x][*y] == ship)
+	{
+		C[*x][*y] = hit;
+		W[*x][*y] = hit;
+		if (C[*x - 1][*y] != ship && C[*x + 1][*y] != ship && C[*x][*y - 1] != ship && C[*x][*y + 1] != ship)
+		{
+			shell(C, miss, hit);
+			for (int i = 0; i < 10; i++)
+			{
+				for (int j = 0; j < 10; j++)
+				{
+					if(C[i][j] == hit|| C[i][j] == miss)W[i][j]= C[i][j];
+				}
+			}
+			*ship2 = *ship2-1;
+		}
+		system("cls");		
+		print(Q, W, ship1, ship2);
+		if(*ship2!=0)choiceuser(Q,C,W, x, y,ship1, ship2);		
+	}
+	else
+	{
+		C[*x][*y] = miss;
+		W[*x][*y] = miss;
+	}		
+}
+void choicecomp(char U[10][10], int* x, int* y, int *ship1,int *c,int*pxc,int*pyc,bool l)
+{		
+	if (*c == 1)
+	{		
+		for (int i=0; i < 10; i++)
+		{
+			for (int j=0; j < 10; j++)
+			{
+				if (U[i][j] != hit && U[i][j] != miss)
+				{				
+						*x = i;
+						*y = j;
+						goto go;
+					
+				}
+			}
+		}
+	go:
+		if (U[*x][*y] == ship)
+		{
+			U[*x][*y] = hit;
+			if (U[*x - 1][*y] != ship && U[*x + 1][*y] != ship && U[*x][*y - 1] != ship && U[*x][*y + 1] != ship)
+			{
+				//shell(U, miss, hit);
+				*ship1 = *ship1 - 1;
+			}
+			if (*ship1 != 0) choicecomp(U, x, y, ship1, c, pxc, pyc, l);			
+			*pxc = *x;
+			*pyc = *y;
+		}
+		else
+		{
+			U[*x][*y] = miss;			
+		}
+		system("cls");
+	}	
+	if (*c == 2)
+	{
+		if (l == 1)
+		{			
+			*x= * pxc+1;
+			*y=*pyc;
+			goto goint;						
+		}
+		if (l == 0)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				for (int j = 0; j < 10; j++)
+				{
+					if (U[i][j] != hit && U[i][j] != miss)
+					{
+						*x = i;
+						*y = j;
+						goto goint;
+					}
+				}
+			}
+		}
+	goint:
+		if (U[*x][*y] == ship)
+		{
+			U[*x][*y] = hit;
+			l = 1;
+			*pxc = *x;
+			*pyc = *y;
+			if (U[*x - 1][*y] != ship && U[*x + 1][*y] != ship && U[*x][*y - 1] != ship && U[*x][*y + 1] != ship)
+			{
+				shell(U, miss, hit);
+				*ship1 = *ship1 - 1;
+				l = 0;
+			}
+			if (*ship1 != 0)
+			{
+				choicecomp(U, x, y, ship1, c, pxc, pyc, l);
+			}			
+		}
+		else
+		{
+			U[*x][*y] = miss;
+			l = 0;
+		}		
+		system("cls");
+	}	
+}
+char autoset(char comp[10][10])
+{
+	int w = 0;
+	four_deck_ship(comp);
+	shell(comp, shel, ship);
+	while (w < 2) 
+	{ 
+		three_deck_ship(comp);
+		shell(comp, shel, ship);
+		w++;
+	}
+	while (w < 5)
+	{	
+		too_deck_ship(comp);
+		shell(comp, shel, ship);
+		w++; 
+	}
+	while (w < 9) 
+	{ 
+		one_deck_ship(comp);
+		shell(comp, shel, ship);
+		w++;
+	}
+	return comp[10][10];
+}
+void game(char user[10][10], char user2[10][10], char cover[10][10], int* px, int* py, int* Ship1, int* Ship2,int*a, int*b,int*c,int*pxc,int*pyc,int*pxc2,int*pyc2)
+{
+	if (*b == 1)
+	{
+		userset(user);
+	}
+	if (*b == 2)
+	{
+		autoset(user);
+	}
+	autoset(user2);
+	bool l=0;
+	while (*Ship1 > 0 || *Ship2 > 0)
+	{
+		choicecomp(user, px, py, Ship1,c,pxc2,pyc2,l);
+		if (*Ship1 == 0)
+		{
+			cout << endl << "_____Победил Игрок 2____"<<endl<<endl;
+			print(user, user2, Ship1, Ship2);
+			break;
+		}
+		if (*a == 1)
+		{
+			print(user, cover, Ship1, Ship2);			
+			choiceuser(user, user2, cover, px, py, Ship1, Ship2);
+			if (*Ship1 == 222)
+			{
+				break;
+			}
+		}
+		if (*a == 2) 
+		{ 
+			print(user, user2, Ship1, Ship2);
+			choicecomp(user2, pxc, pyc, Ship2,c,pxc2,pyc2,l);		 
+		}
+		if (*Ship2 == 0)
+		{
+			cout << endl << "_____Победил Игрок 1____"<<endl<<endl;
+			print(user, user2, Ship1, Ship2);
+			break;
+		}
+	}	
+}
+int main()
+{
+	start:
+	srand(time(NULL));
+	setlocale(LC_ALL, "");	
+	cout << "\t\t\t\t____ИГРА МОРСКОЙ БОЙ____" << endl;
+	cout << "Значение ячейки вводиться в формате (столбец строка) ХХ где Х число от 0 до 9" << endl;
+	system("goto begin");
+	int* users, *mode, *placement;
+	int a=0, b=0, c=0;
+	users = &a;
+	placement = &b;
+	mode = &c;
+	menu(users, placement, mode);
+	char comp[10][10];
+	char comp2[10][10];
+	char user[10][10];
+	char cover[10][10];	
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			comp[i][j] = field;
+			comp2[i][j] = field;
+			user[i][j] = field;
+			cover[i][j] = ask;			
+		}
+	}	
+	cout << endl;		
+	int ship1 = 10;
+	int ship2 = 10;
+	int* Ship1 = &ship1;
+	int* Ship2 = &ship2;
+	int x = 0, y = 0, xc=0,yc=0,xc2=0,yc2=0;
+	int* px = &x, * py = &y, * pxc = &xc, * pyc = &yc, * pxc2 = &xc2, * pyc2 = &yc2;	
+	if (a == 1)
+	{
+		game(user, comp, cover, px, py, Ship1, Ship2,users, placement, mode,pxc,pyc,pxc2,pyc2);
+	}
+	if (a == 2)
+	{
+		autoset(comp2);
+		game(comp2, comp, cover, px, py, Ship1, Ship2,users, placement, mode,pxc, pyc,pxc2,pyc2);
+	}
+	if (ship1 == 222)goto start;
+	return 0;
+}
